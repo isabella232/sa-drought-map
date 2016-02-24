@@ -119,6 +119,12 @@ var frameIndex = 0;
 var isMobile = false;
 
 function init() {
+    // Preload images
+    _.each(FRAMES, function(frame) {
+        var img = new Image();
+        img.src = frame['image'];
+    });
+
   d3.json('data/countries.json', function(error, data) {
     countriesData = topojson.feature(data, data['objects']['sa']);
 
