@@ -1,0 +1,93 @@
+/*
+ * Config
+ */
+border-radius()
+  -webkit-border-radius: arguments
+  -moz-border-radius: arguments
+  border-radius: arguments
+
+$precip_none = #e96541
+$precip_lt_50 = #f69b69
+$precip_lt_75 = #fecd93
+$precip_normal = #ffffbf
+$precip_over = #d3dcbe
+
+/*
+ * Thing styles
+ */
+svg
+  background-color: $qz-map-water
+  // border: 1px solid $qz-map-graticule
+
+.countries path
+  stroke: black
+  stroke-width: 2px
+  // fill: $qz-map-land-fill
+  fill: none
+
+.arrows path {
+  stroke-width: 1px;
+  stroke: $qz-body-black;
+  fill: none;
+}
+
+.labels text
+  fill: $qz-gray-3
+  font-family: 'AdelleSans-Regular', Helvetica, Arial, sans-serif
+  -webkit-font-smoothing: antialiased
+  font-size: 12px
+
+ul#legend
+  padding: 10px 0 0 0
+  list-style-type: none
+  text-align: center
+
+  li
+    display: inline-block
+    margin: 0 18px 0 0
+    padding: 0
+    line-height: 16px
+
+    b
+      display: inline-block
+      width: 14px
+      height: 14px
+      margin-right: 6px
+      float: left
+      border: 1px solid black
+
+    div
+      whitespace: nowrap
+      fill: $qz-gray-2
+      font-size: 14px
+      font-family: 'AdelleSans-Regular', Helvetica, Arial, sans-serif
+      float: left;
+
+    &.precip-none b
+      background-color: $precip_none
+
+    &.precip-lt-50 b
+      background-color: $precip_lt_50
+
+    &.precip-lt-75 b
+      background-color: $precip_lt_75
+
+    &.precip-normal b
+      background-color: $precip_normal
+
+    &.precip-over b
+      background-color: $precip_over
+
+div.clear
+  clear: both
+
+/*
+ * Media queries
+ */
+@media screen and (max-width: 600px)
+  .countries path
+    stroke-width: 1px
+
+  ul#legend
+    padding: 5px 0
+    text-align: left
