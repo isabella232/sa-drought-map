@@ -6,6 +6,14 @@ border-radius()
   -moz-border-radius: arguments
   border-radius: arguments
 
+noselect()
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none
+
 $precip_none = #e96541
 $precip_lt_50 = #f69b69
 $precip_lt_75 = #fecd93
@@ -116,6 +124,9 @@ div#selector
 
       &.prev
         visibility: hidden
+
+      &.prev, &.next
+        noselect()
 
       &.prev:hover, &.next:hover
           cursor: pointer
