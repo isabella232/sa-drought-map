@@ -32,10 +32,32 @@ svg
 }
 
 .labels text
-  fill: $qz-gray-3
+  fill: black
   font-family: 'AdelleSans-Regular', Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   font-size: 12px
+
+.controls
+    polygon
+        fill: $qz-gray-3
+
+    text.frame-name
+        fill: $qz-gray-3
+        font-family: 'AdelleSans-Bold', Helvetica, Arial, sans-serif
+        -webkit-font-smoothing: antialiased
+
+    rect.next
+        fill: rgba(200,200,200,0.3)
+        stroke-width: 2px
+        stroke: $qz-gray-2
+
+    text.next
+        fill: $qz-gray-3
+        font-family: 'AdelleSans-Regular', Helvetica, Arial, sans-serif
+        -webkit-font-smoothing: antialiased
+
+    &:hover
+        cursor: pointer
 
 ul#legend
   padding: 10px 0 0 0
@@ -87,6 +109,10 @@ div.clear
 @media screen and (max-width: 600px)
   .countries path
     stroke-width: 1px
+
+    rect.next {
+      stroke-width: 1px;
+    }
 
   ul#legend
     padding: 5px 0

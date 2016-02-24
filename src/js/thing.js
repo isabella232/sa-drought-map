@@ -15,20 +15,68 @@ var MOBILE_THRESHOLD = 600;
 
 var LABEL_DEFAULTS = {
     'text-anchor': 'middle',
-        'font-size': 1,
-        'rotate': 0
+    'font-size': 0.8,
+    'rotate': 0
 };
 
 var LABELS = [
     {
-        'text': 'Gabon',
-        'loc': [11.75, -0.75]
+        'text': 'Angola',
+        'loc': [18, -13]
     },
     {
-        'text': '<tspan dx="12.5%">São Tomé</tspan><tspan dx="-12.5%" dy="2.25%">and Príncipe</tspan>',
-        'loc': [-6, -1],
-        'text-anchor': 'end'
-    }
+        'text': 'Botswana',
+        'loc': [24, -22.5]
+    },
+    {
+        'text': 'Dem. Rep. of the Congo',
+        'loc': [23, -6]
+    },
+    {
+        'text': 'Lesotho',
+        'loc': [29, -30]
+    },
+    {
+        'text': 'Madagascar',
+        'loc': [47, -20]
+    },
+    {
+        'text': 'Malawi',
+        'loc': [34, -14]
+    },
+    {
+        'text': 'Mozambique',
+        'loc': [38, -15]
+    },
+    {
+        'text': 'Namibia',
+        'loc': [17, -21]
+    },
+    {
+        'text': 'South Africa',
+        'loc': [22.5, -31]
+    },
+    {
+        'text': 'Swaziland',
+        'loc': [31, -26]
+    },
+    {
+        'text': 'Tanzania',
+        'loc': [35, -7]
+    },
+    {
+        'text': 'Zambia',
+        'loc': [26, -15]
+    },
+    {
+        'text': 'Zimbabwe',
+        'loc': [29.5, -19.25]
+    },
+    // {
+    //     'text': '<tspan dx="12.5%">São Tomé</tspan><tspan dx="-12.5%" dy="2.25%">and Príncipe</tspan>',
+    //     'loc': [-6, -1],
+    //     'text-anchor': 'end'
+    // }
 ];
 
 var ARROWS = [
@@ -42,7 +90,19 @@ var ARROWS = [
     },
 ];
 
+var FRAMES = [
+    {
+        'name': 'October rainfall',
+        'image': 'data/october.png'
+    },
+    {
+        'name': 'November rainfall',
+        'image': 'data/november.png'
+    }
+]
+
 var countriesData = null;
+var frameIndex = 0;
 
 var isMobile = false;
 
@@ -71,11 +131,24 @@ function render() {
   renderMap({
     container: '#map',
     width: map_width,
-    countries: countriesData
+    countries: countriesData,
+    frame: FRAMES[frameIndex]
   });
 
   // Resize
   fm.resize()
+}
+
+function onNextButtonClicked() {
+	d3.event.preventDefault();
+
+    frameIndex += 1;
+
+    if (frameIndex >= FRAMES.length) {
+        frameIndex = 0;
+    }
+
+	render();
 }
 
 /*
@@ -102,7 +175,7 @@ function renderMap(config) {
     var chartWidth = width - (margins['left'] + margins['right']);
     var chartHeight = height - (margins['top'] + margins['bottom']);
 
-    var mapCenter = [28, -20];
+    var mapCenter = [30, -20];
     var scaleFactor = chartWidth / DEFAULT_WIDTH;
     var mapScale = scaleFactor * defaultScale;
 
@@ -139,7 +212,7 @@ function renderMap(config) {
         var height = rasterMax[1] - rasterMin[1];
 
         chartElement.append('image')
-            .attr('xlink:href', 'data/cropped.png')
+            .attr('xlink:href', config['frame']['image'])
             .attr('x', rasterMin[0])
             .attr('y', rasterMin[1])
             .attr('width', width)
@@ -196,21 +269,57 @@ function renderMap(config) {
       .attr('class', 'labels');
 
     labels.selectAll('text')
-      .data(LABELS)
-      .enter().append('text')
-                .attr('transform', function(d) {
-                        var rotate = d['rotate'] || LABEL_DEFAULTS['rotate'];
-              return 'translate(' + projection(d['loc']) + ') rotate(' + rotate + ')';
-                })
-                .style('text-anchor', function(d) {
-                    return d['text-anchor'] || LABEL_DEFAULTS['text-anchor'];
-                })
-                .style('font-size', function(d) {
-                    return ((d['font-size'] || LABEL_DEFAULTS['font-size']) * scaleFactor * 100).toString() + '%';
-                })
+        .data(LABELS)
+        .enter().append('text')
+        .attr('transform', function(d) {
+            var rotate = d['rotate'] || LABEL_DEFAULTS['rotate'];
+            return 'translate(' + projection(d['loc']) + ') rotate(' + rotate + ')';
+        })
+        .style('text-anchor', function(d) {
+            return d['text-anchor'] || LABEL_DEFAULTS['text-anchor'];
+        })
+        .style('font-size', function(d) {
+            return ((d['font-size'] || LABEL_DEFAULTS['font-size']) * scaleFactor * 100).toString() + '%';
+        })
         .html(function(d) {
-                    return d['text'];
-                });
+            return d['text'];
+        });
+
+    var controls = chartElement.append('g')
+      .attr('class', 'controls');
+
+    controls.append('text')
+        .attr('class', 'frame-name')
+        .attr('transform', function(d) {
+            return 'translate(' + projection([38, -28.5]) + ')';
+        })
+        .style('font-size', function(d) {
+            return (1.2 * scaleFactor * 100).toString() + '%';
+        })
+        .html(function(d) {
+            return config['frame']['name'];
+        });
+
+    // Click area
+    var nw = projection([38, -29.75]);
+    var se = projection([48, -32]);
+
+    controls.append('text')
+        .attr('class', 'next')
+        .attr('transform', 'translate(' + projection([38.25, -31.5]) + ')')
+        .style('font-size', function(d) {
+            return (1.1 * scaleFactor * 100).toString() + '%';
+        })
+        .html('Next month ▶')
+
+    controls.append('rect')
+        .attr('class', 'next')
+        .attr('transform', 'translate(' + nw + ')')
+        .attr('width', se[0] - nw[0])
+        .attr('height', se[1] - nw[1])
+        .attr('rx', isMobile ? 3 : 5)
+        .attr('ry', isMobile ? 3 : 5)
+        .on('click', onNextButtonClicked);
 }
 
 $(document).ready(function () {
