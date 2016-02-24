@@ -98,6 +98,18 @@ var FRAMES = [
     {
         'name': 'November rainfall',
         'image': 'data/november.png'
+    },
+    {
+        'name': 'December rainfall',
+        'image': 'data/december.png'
+    },
+    {
+        'name': 'January rainfall',
+        'image': 'data/january.png'
+    },
+    {
+        'name': 'February rainfall',
+        'image': 'data/february.png'
     }
 ]
 
@@ -203,21 +215,33 @@ function renderMap(config) {
       .append('g')
       .attr('transform', 'translate(' + margins['left'] + ',' + margins['top'] + ')');
 
-        /*
-         * Create raster elements.
-         */
-        var rasterMin = projection([3, 4]);
-        var rasterMax = projection([53, -36]);
-        var width = rasterMax[0] - rasterMin[0];
-        var height = rasterMax[1] - rasterMin[1];
+    /*
+     * Create clipping path for raster.
+     */
+    var clipPath = chartElement.append('clipPath')
+        .attr('id', 'clip');
 
-        chartElement.append('image')
-            .attr('xlink:href', config['frame']['image'])
-            .attr('x', rasterMin[0])
-            .attr('y', rasterMin[1])
-            .attr('width', width)
-            .attr('height', height)
-            .attr('class', 'bg');
+    clipPath.selectAll('path')
+        .data(config['countries']['features'])
+        .enter().append('path')
+        .attr('d', geoPath);
+
+    /*
+     * Create raster elements.
+     */
+    var rasterMin = projection([3, 4]);
+    var rasterMax = projection([53, -36]);
+    var width = rasterMax[0] - rasterMin[0];
+    var height = rasterMax[1] - rasterMin[1];
+
+    chartElement.append('image')
+        .attr("clip-path", "url(#clip)")
+        .attr('xlink:href', config['frame']['image'])
+        .attr('x', rasterMin[0])
+        .attr('y', rasterMin[1])
+        .attr('width', width)
+        .attr('height', height)
+        .attr('class', 'bg');
 
     /*
      * Create geographic elements.
@@ -233,37 +257,37 @@ function renderMap(config) {
         })
         .attr('d', geoPath);
 
-        chartElement.append('defs')
-             .append('marker')
-             .attr('id','arrowhead')
-             .attr('orient','auto')
-             .attr('viewBox','0 0 5.108 8.18')
-             .attr('markerHeight','8.18')
-             .attr('markerWidth','5.108')
-             .attr('orient','auto')
-             .attr('refY','4.09')
-             .attr('refX','5')
-             .append('polygon')
-             .attr('points','0.745,8.05 0.07,7.312 3.71,3.986 0.127,0.599 0.815,-0.129 5.179,3.999')
-             .attr('fill','#4C4C4C')
+    chartElement.append('defs')
+         .append('marker')
+         .attr('id','arrowhead')
+         .attr('orient','auto')
+         .attr('viewBox','0 0 5.108 8.18')
+         .attr('markerHeight','8.18')
+         .attr('markerWidth','5.108')
+         .attr('orient','auto')
+         .attr('refY','4.09')
+         .attr('refX','5')
+         .append('polygon')
+         .attr('points','0.745,8.05 0.07,7.312 3.71,3.986 0.127,0.599 0.815,-0.129 5.179,3.999')
+         .attr('fill','#4C4C4C')
 
-        var arrowLine = d3.svg.line()
-            .interpolate('basis')
-            .x(function(d) {
-                return projection(d)[0];
-            })
-            .y(function(d) {
-                return projection(d)[1];
-            });
+    var arrowLine = d3.svg.line()
+        .interpolate('basis')
+        .x(function(d) {
+            return projection(d)[0];
+        })
+        .y(function(d) {
+            return projection(d)[1];
+        });
 
-        var arrows = chartElement.append('g')
-            .attr('class', 'arrows');
+    var arrows = chartElement.append('g')
+        .attr('class', 'arrows');
 
-        arrows.selectAll('path')
-            .data(ARROWS)
-            .enter().append('path')
-            .attr('d', function(d) { return arrowLine(d['path']); })
-            .style('marker-end', 'url(#arrowhead)');
+    arrows.selectAll('path')
+        .data(ARROWS)
+        .enter().append('path')
+        .attr('d', function(d) { return arrowLine(d['path']); })
+        .style('marker-end', 'url(#arrowhead)');
 
     var labels = chartElement.append('g')
       .attr('class', 'labels');
@@ -304,13 +328,22 @@ function renderMap(config) {
     var nw = projection([38, -29.75]);
     var se = projection([48, -32]);
 
+    var text = 'Next month ▶';
+
+    if (frameIndex == FRAMES.length - 1) {
+        text = 'Start over ↻';
+    }
+
     controls.append('text')
         .attr('class', 'next')
-        .attr('transform', 'translate(' + projection([38.25, -31.5]) + ')')
+        .attr('x', nw[0] + (se[0] - nw[0]) / 2)
+        .attr('y', nw[1] + (se[1] - nw[1]) / 2)
+        .style('text-anchor', 'middle')
+        .style('alignment-baseline', 'middle')
         .style('font-size', function(d) {
             return (1.1 * scaleFactor * 100).toString() + '%';
         })
-        .html('Next month ▶')
+        .html(text)
 
     controls.append('rect')
         .attr('class', 'next')
