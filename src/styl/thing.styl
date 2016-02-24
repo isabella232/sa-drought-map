@@ -35,8 +35,8 @@ svg
   fill: none
 
 .arrows path {
-  stroke-width: 1px;
-  stroke: $qz-body-black;
+  stroke-width: 2px;
+  stroke: black;
   fill: none;
 }
 
@@ -45,6 +45,15 @@ svg
   font-family: 'AdelleSans-Regular', Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   font-size: 12px
+
+.shadows text {
+  fill: #fff;
+  font-family: 'AdelleSans-Regular', Helvetica, Arial, sans-serif
+  -webkit-font-smoothing: antialiased
+  stroke: #fff;
+  stroke-width: 2px;
+  opacity: .7;
+}
 
 ul#legend
   padding: 0 0 5px 0
@@ -118,9 +127,11 @@ div#selector
   .countries path
     stroke-width: 1px
 
-    rect.next {
-      stroke-width: 1px;
-    }
+  rect.next
+    stroke-width: 1px
+
+  .arrows path
+    stroke-width: 1px
 
   ul#legend
     padding: 5px 0

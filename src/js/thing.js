@@ -34,19 +34,22 @@ var LABELS = [
     },
     {
         'text': 'Lesotho',
-        'loc': [29, -30]
+        'text-anchor': 'start',
+        'loc': [32, -32]
     },
     {
         'text': 'Madagascar',
-        'loc': [47, -20]
+        'loc': [49, -28]
     },
     {
         'text': 'Malawi',
-        'loc': [34, -14]
+        'text-anchor': 'start',
+        'loc': [42, -9.5]
     },
     {
         'text': 'Mozambique',
-        'loc': [38, -15]
+        'rotate': -31,
+        'loc': [36.5, -17.5]
     },
     {
         'text': 'Namibia',
@@ -58,7 +61,8 @@ var LABELS = [
     },
     {
         'text': 'Swaziland',
-        'loc': [31, -26]
+        'text-anchor': 'start',
+        'loc': [34.5, -29]
     },
     {
         'text': 'Tanzania',
@@ -70,7 +74,7 @@ var LABELS = [
     },
     {
         'text': 'Zimbabwe',
-        'loc': [29.5, -19.25]
+        'loc': [29.75, -19.25]
     },
     // {
     //     'text': '<tspan dx="12.5%">São Tomé</tspan><tspan dx="-12.5%" dy="2.25%">and Príncipe</tspan>',
@@ -80,12 +84,36 @@ var LABELS = [
 ];
 
 var ARROWS = [
-    // Sao Tome and Principe
+    // Lesotho
     {
         'path': [
-            [0, -1],
-            [4, -1],
-            [6.25, 0.15]
+            [31.75, -31.75],
+            [30, -31],
+            [29.25, -30.25]
+        ]
+    },
+    // Madagascar
+    {
+        'path': [
+            [49, -27],
+            [51, -26],
+            [49, -22]
+        ]
+    },
+    // Malawi
+    {
+        'path': [
+            [41.5, -9.25],
+            [40, -9.25],
+            [35, -10]
+        ]
+    },
+    // Swaziland
+    {
+        'path': [
+            [34.25, -28.75],
+            [33, -28.5],
+            [32, -27.5]
         ]
     },
 ];
@@ -319,6 +347,26 @@ function renderMap(config) {
         .enter().append('path')
         .attr('d', function(d) { return arrowLine(d['path']); })
         .style('marker-end', 'url(#arrowhead)');
+
+    var shadows = chartElement.append('g')
+      .attr('class', 'shadows')
+
+    shadows.selectAll('text')
+        .data(LABELS)
+        .enter().append('text')
+        .attr('transform', function(d) {
+            var rotate = d['rotate'] || LABEL_DEFAULTS['rotate'];
+            return 'translate(' + projection(d['loc']) + ') rotate(' + rotate + ')';
+        })
+        .style('text-anchor', function(d) {
+            return d['text-anchor'] || LABEL_DEFAULTS['text-anchor'];
+        })
+        .style('font-size', function(d) {
+            return ((d['font-size'] || LABEL_DEFAULTS['font-size']) * scaleFactor * 100).toString() + '%';
+        })
+        .html(function(d) {
+            return d['text'];
+        });
 
     var labels = chartElement.append('g')
       .attr('class', 'labels');
