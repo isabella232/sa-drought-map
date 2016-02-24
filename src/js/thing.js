@@ -92,23 +92,23 @@ var ARROWS = [
 
 var FRAMES = [
     {
-        'name': 'October rainfall',
+        'name': 'October 2015',
         'image': 'data/october.png'
     },
     {
-        'name': 'November rainfall',
+        'name': 'November 2015',
         'image': 'data/november.png'
     },
     {
-        'name': 'December rainfall',
+        'name': 'December 2015',
         'image': 'data/december.png'
     },
     {
-        'name': 'January rainfall',
+        'name': 'January 2016',
         'image': 'data/january.png'
     },
     {
-        'name': 'February rainfall',
+        'name': 'February 2016',
         'image': 'data/february.png'
     }
 ]
@@ -130,11 +130,48 @@ function init() {
 
     render();
     $(window).resize(throttle(onResize, 250));
+
+    d3.select('#selector .prev').on('click', onPrevButtonClicked);
+    d3.select('#selector .next').on('click', onNextButtonClicked);
   });
 }
 
 function onResize() {
   render()
+}
+
+function onPrevButtonClicked() {
+	d3.event.preventDefault();
+
+    frameIndex -= 1;
+
+    updateSelector();
+	render();
+}
+
+function onNextButtonClicked() {
+	d3.event.preventDefault();
+
+    frameIndex += 1;
+
+    updateSelector();
+	render();
+}
+
+function updateSelector() {
+    d3.select('#selector .month').text(FRAMES[frameIndex]['name']);
+
+    if (frameIndex == FRAMES.length - 1) {
+        d3.select('#selector .next').style('visibility', 'hidden');
+    } else {
+        d3.select('#selector .next').style('visibility', 'visible');
+    }
+
+    if (frameIndex == 0) {
+        d3.select('#selector .prev').style('visibility', 'hidden');
+    } else {
+        d3.select('#selector .prev').style('visibility', 'visible');
+    }
 }
 
 function render() {
@@ -155,18 +192,6 @@ function render() {
 
   // Resize
   fm.resize()
-}
-
-function onNextButtonClicked() {
-	d3.event.preventDefault();
-
-    frameIndex += 1;
-
-    if (frameIndex >= FRAMES.length) {
-        frameIndex = 0;
-    }
-
-	render();
 }
 
 /*
@@ -314,51 +339,6 @@ function renderMap(config) {
         .html(function(d) {
             return d['text'];
         });
-
-    var controls = chartElement.append('g')
-      .attr('class', 'controls');
-
-    controls.append('text')
-        .attr('class', 'frame-name')
-        .attr('transform', function(d) {
-            return 'translate(' + projection([38, -28.5]) + ')';
-        })
-        .style('font-size', function(d) {
-            return (1.2 * scaleFactor * 100).toString() + '%';
-        })
-        .html(function(d) {
-            return config['frame']['name'];
-        });
-
-    // Click area
-    var nw = projection([38, -29.75]);
-    var se = projection([48, -32]);
-
-    var text = 'Next month ▶';
-
-    if (frameIndex == FRAMES.length - 1) {
-        text = 'Start over ↻';
-    }
-
-    controls.append('text')
-        .attr('class', 'next')
-        .attr('x', nw[0] + (se[0] - nw[0]) / 2)
-        .attr('y', nw[1] + (se[1] - nw[1]) / 2)
-        .style('text-anchor', 'middle')
-        .style('alignment-baseline', 'middle')
-        .style('font-size', function(d) {
-            return (1.1 * scaleFactor * 100).toString() + '%';
-        })
-        .html(text)
-
-    controls.append('rect')
-        .attr('class', 'next')
-        .attr('transform', 'translate(' + nw + ')')
-        .attr('width', se[0] - nw[0])
-        .attr('height', se[1] - nw[1])
-        .attr('rx', isMobile ? 3 : 5)
-        .attr('ry', isMobile ? 3 : 5)
-        .on('click', onNextButtonClicked);
 }
 
 $(document).ready(function () {

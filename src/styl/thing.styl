@@ -17,7 +17,16 @@ $precip_over = #d3dcbe
  */
 svg
   background-color: $qz-map-water
-  // border: 1px solid $qz-map-graticule
+
+#topper
+    fill: $qz-body-black
+    font-family: 'AdelleSans-Regular', Helvetica, Arial, sans-serif
+    -webkit-font-smoothing: antialiased
+    font-size: 26px
+
+#map
+    border-top: 2px solid #666
+    width: 100%
 
 .countries path
   stroke: black
@@ -37,43 +46,22 @@ svg
   -webkit-font-smoothing: antialiased
   font-size: 12px
 
-.controls
-    polygon
-        fill: $qz-gray-3
-
-    text.frame-name
-        fill: $qz-gray-3
-        font-family: 'AdelleSans-Bold', Helvetica, Arial, sans-serif
-        -webkit-font-smoothing: antialiased
-
-    rect.next
-        fill: rgba(200,200,200,0.3)
-        stroke-width: 2px
-        stroke: $qz-gray-2
-
-    text.next
-        fill: $qz-gray-3
-        font-family: 'AdelleSans-Regular', Helvetica, Arial, sans-serif
-        -webkit-font-smoothing: antialiased
-
-    &:hover
-        cursor: pointer
-
 ul#legend
-  padding: 10px 0 0 0
+  padding: 0 0 5px 0
+  margin-left: 0
+  margin-top: 5px
   list-style-type: none
-  text-align: center
 
   li
     display: inline-block
     margin: 0 18px 0 0
     padding: 0
-    line-height: 16px
+    line-height: 18px
 
     b
       display: inline-block
-      width: 14px
-      height: 14px
+      width: 16px
+      height: 16px
       margin-right: 6px
       float: left
       border: 1px solid black
@@ -81,7 +69,7 @@ ul#legend
     div
       whitespace: nowrap
       fill: $qz-gray-2
-      font-size: 14px
+      font-size: 16px
       font-family: 'AdelleSans-Regular', Helvetica, Arial, sans-serif
       float: left;
 
@@ -103,6 +91,23 @@ ul#legend
 div.clear
   clear: both
 
+div#selector
+    fill: $qz-body-black
+    font-family: 'AdelleSans-Regular', Helvetica, Arial, sans-serif
+    -webkit-font-smoothing: antialiased
+    font-size: 26px
+    width: 100%
+    text-align: center
+
+    div
+      display: inline-block
+
+      &.month
+          width: 200px
+
+      &.prev:hover, &.next:hover
+          cursor: pointer
+
 /*
  * Media queries
  */
@@ -117,3 +122,13 @@ div.clear
   ul#legend
     padding: 5px 0
     text-align: left
+
+    li
+        line-height: 16px
+
+        b
+            width: 14px
+            height: 14px
+
+        div
+            font-size: 14px
