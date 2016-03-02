@@ -109,24 +109,29 @@ div.clear
   clear: both
 
 div#selector
+    noselect()
     fill: $qz-body-black
     font-family: 'AdelleSans-Regular', Helvetica, Arial, sans-serif
     -webkit-font-smoothing: antialiased
-    font-size: 26px
+    font-size: 22px
     width: 100%
     text-align: center
+    margin-top: 15px
 
     div
       display: inline-block
 
       &.month
-          width: 200px
+          width: 225px
 
       &.prev
         visibility: hidden
 
       &.prev, &.next
-        noselect()
+        width: 125px
+        background-color: #eee
+        border: 1px solid #999
+        padding: 2px 4px
 
         &:hover
           cursor: pointer
@@ -136,9 +141,6 @@ div#selector
  */
 @media screen and (max-width: 600px)
   .countries path
-    stroke-width: 1px
-
-  rect.next
     stroke-width: 1px
 
   .arrows path
@@ -159,6 +161,13 @@ div#selector
             font-size: 14px
 
   div#selector
-    font-size: 26px
+    font-size: 16px
     width: 100%
     text-align: center
+
+    div
+      &.month
+        width: 140px
+
+      &.prev, &.next
+        width: 90px
